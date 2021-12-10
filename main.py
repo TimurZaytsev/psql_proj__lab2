@@ -1,3 +1,4 @@
+import database as db
 import sys
 from PyQt5 import Qt as Q
 from gui import Ui
@@ -14,4 +15,3 @@ if __name__ == '__main__':
     w = MainWindow()
     w.show()
     sys.exit(app.exec_())
-

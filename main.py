@@ -2,6 +2,7 @@ import sys
 from PyQt5 import Qt as Q
 from gui import Ui
 
+
 class MainWindow(Q.QMainWindow):
     def __init__(self):
         super().__init__()

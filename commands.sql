@@ -62,3 +62,23 @@ CREATE OR REPLACE FUNCTION get_services ()
     AS $$
     select * from services;
 $$ LANGUAGE sql;
+
+create function add_to_clients(id integer, name text, surname text, telephone integer)
+	returns void language sql as $$
+		insert into "clients"(id_client, name, surname, telephone) values (id, name, surname, telephone)
+	$$;
+
+create function add_to_branches(id integer, name text, address text, telephone integer)
+	returns void language sql as $$
+		insert into "branches"(id_branches, name_br, address, telephone) values (id, name, address, telephone)
+	$$;
+
+create function add_to_tos(id integer, name text, type text, price integer)
+	returns void language sql as $$
+		insert into "type_of_services"(id_tos, name_tos, type, price) values (id, name, type, price)
+	$$;
+
+create function add_to_services(br_id integer, tos_id integer, cl_id integer, date_ text)
+	returns void language sql as $$
+		insert into "services"(branch_id, tos_id, client_id, date_of_receipt) values (br_id, tos_id, cl_id, date_)
+	$$;

@@ -9,73 +9,87 @@ class DatabasePy(object):
         self.user = 'postgres'
         self.password = 'baka'
         self.host = '127.0.0.1'
+        self.connection = self.connect_db(self.db_name)
+        with self.connection.cursor() as cursor_:
+            cursor_.execute(open("commands.sql", "r").read())
+
+    def connect_db(self, name):
+        return \
+            ps.connect(
+                host=self.host,
+                user=self.user,
+                password=self.password,
+                database=name
+            )
+
+    def user_change(self, name):
+        self.user = name
 
     def create_db(self, name):
-        connection = ps.connect(
-            host=self.host,
-            user=self.user,
-            password=self.password,
-            database="postgres"
-        )
-
         self.db_name = name
+        self.connection.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
 
-        connection.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
-
-        with connection.cursor() as cur:
+        with self.connection.cursor() as cur:
             cur.execute(sql.SQL("CREATE DATABASE {}").format(
                 sql.Identifier(self.db_name))
             )
 
-        if connection:
-            connection.close()
-
-    def test_1_step(self):
-        try:
-            connection = ps.connect(
-                host=self.host,
-                user=self.user,
-                password=self.password,
-                database=self.db_name
-            )
-
-            with connection.cursor() as cur:
-                cur.execute("CREATE TABLE test (id serial PRIMARY KEY, num integer, data varchar);")
-                cur.execute(f"INSERT INTO test (num, data) VALUES (%s, %s)", (100, "abc'def"))
-                cur.execute("SELECT * FROM test;")
-                print(cur.fetchone())
-
-                # connection.commit()
-                print("operation is done")
-        except Exception as ex:
-            print("[INFO] Error while working with PSQL", ex)
-        finally:
-            if connection:
-                connection.close()
-                print("[INFO] PSQL connection closed")
-
     def __del__(self):
+        if self.connection:
+            self.connection.close()
         del self
 
     def drop_db(self):
-        connection = ps.connect(
-            host=self.host,
-            user=self.user,
-            password=self.password,
-            database="postgres"
-        )
-        connection.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
-
-        cur = connection.cursor()
-
-        cur.execute(sql.SQL(f"DROP DATABASE {self.db_name}"))
-
-        if cur:
-            cur.close()
-        if connection:
-            connection.close()
+        self.connection.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+        with self.connection.cursor() as cur:
+            cur.execute(sql.SQL(f"DROP DATABASE {self.db_name}"))
 
         print("database was dropped")
         self.__del__()
 
+    def create_clients(self):
+        with self.connection.cursor() as cur:
+            cur.callproc("create_tab_clients")
+        self.connection.commit()
+
+    def create_branches(self):
+        with self.connection.cursor() as cur:
+            cur.callproc("create_tab_branches")
+        self.connection.commit()
+
+    def create_tos(self):
+        with self.connection.cursor() as cur:
+            cur.callproc("create_tab_types_of_services")
+        self.connection.commit()
+
+    def create_services(self):
+        with self.connection.cursor() as cur:
+            cur.callproc("create_tab_services")
+        self.connection.commit()
+
+    def create_tables(self):
+        self.create_clients()
+        self.create_branches()
+        self.create_tos()
+        self.create_services()
+
+    def get_clients(self):
+        with self.connection.cursor() as cur:
+            cur.callproc("get_clients")
+            return cur.fetchall()
+
+    def get_branches(self):
+        with self.connection.cursor() as cur:
+            cur.callproc("get_branches")
+            return cur.fetchall()
+
+    def get_tos(self):
+        with self.connection.cursor() as cur:
+            cur.callproc("get_tos")
+            return cur.fetchall()
+
+    def get_services(self):
+        with self.connection.cursor() as cur:
+            cur.callproc("get_services")
+            return cur.fetchall()
 

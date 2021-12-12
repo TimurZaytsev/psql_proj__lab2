@@ -203,3 +203,27 @@ CREATE OR REPLACE FUNCTION delete_services_by_date (date_ text)
 $$ LANGUAGE sql;
 
 --DELETE STR
+
+CREATE OR REPLACE FUNCTION delete_clients_by_str (id_ integer)
+    RETURNS void
+    AS $$
+    delete from clients where id_client = id_;
+$$ LANGUAGE sql;
+
+CREATE OR REPLACE FUNCTION delete_branches_by_str (id_ integer)
+    RETURNS void
+    AS $$
+    delete from branches where id_branches = id_;
+$$ LANGUAGE sql;
+
+CREATE OR REPLACE FUNCTION delete_tos_by_srt (id_ integer)
+    RETURNS void
+    AS $$
+    delete from type_of_services where id_tos = id_;
+$$ LANGUAGE sql;
+
+CREATE OR REPLACE FUNCTION delete_services_by_str (id_b integer, id_t integer, id_c integer)
+    RETURNS void
+    AS $$
+    delete from services where branch_id = id_b AND tos_id = id_t AND client_id = id_c;
+$$ LANGUAGE sql;

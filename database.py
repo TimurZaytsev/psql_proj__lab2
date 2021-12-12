@@ -20,7 +20,7 @@ class DatabasePy(object):
         self.connection = self.connect_db(self.db_name)
         with self.connection.cursor() as cur:
             with open("commands.sql", "r") as commands_sql:
-                cur.execute(commands_sql.read(1002))
+                cur.execute(commands_sql.read(1142))
                 self.create_tables()
                 cur.execute(commands_sql.read())
 
@@ -130,7 +130,7 @@ class DatabasePy(object):
 
     def add_to_services(self, br_id, tos_id, client_id, date):
         with self.connection.cursor() as cur:
-            cur.callproc("add_to_services", (br_id, tos_id, client_id, date, ))
+            cur.callproc("add_to_services", (br_id, tos_id, client_id, date,))
         self.connection.commit()
 
     def delete_clients(self):
@@ -155,40 +155,60 @@ class DatabasePy(object):
 
     def search_clients_by_name(self, name):
         with self.connection.cursor() as cur:
-            cur.callproc("search_clients_by_name", (name, ))
+            cur.callproc("search_clients_by_name", (name,))
         self.connection.commit()
 
     def search_branches_by_name(self, name):
         with self.connection.cursor() as cur:
-            cur.callproc("search_branches_by_name", (name, ))
+            cur.callproc("search_branches_by_name", (name,))
         self.connection.commit()
 
     def search_tos_by_type(self, type_):
         with self.connection.cursor() as cur:
-            cur.callproc("search_tos_by_type", (type_, ))
+            cur.callproc("search_tos_by_type", (type_,))
         self.connection.commit()
 
     def search_services_by_date(self, date):
         with self.connection.cursor() as cur:
-            cur.callproc("search_services_by_date", (date, ))
+            cur.callproc("search_services_by_date", (date,))
         self.connection.commit()
 
     def delete_clients_by_name(self, name):
         with self.connection.cursor() as cur:
-            cur.callproc("delete_clients_by_name", (name, ))
+            cur.callproc("delete_clients_by_name", (name,))
         self.connection.commit()
 
     def delete_branches_by_name(self, name):
         with self.connection.cursor() as cur:
-            cur.callproc("delete_branches_by_name", (name, ))
+            cur.callproc("delete_branches_by_name", (name,))
         self.connection.commit()
 
     def delete_tos_by_type(self, type_):
         with self.connection.cursor() as cur:
-            cur.callproc("delete_tos_by_type", (type_, ))
+            cur.callproc("delete_tos_by_type", (type_,))
         self.connection.commit()
 
     def delete_services_by_date(self, date):
         with self.connection.cursor() as cur:
-            cur.callproc("delete_services_by_date", (date, ))
+            cur.callproc("delete_services_by_date", (date,))
+        self.connection.commit()
+
+    def update_clients(self, id_, name_, surname_, telephone_):
+        with self.connection.cursor() as cur:
+            cur.callproc("update_clients", (id_, name_, surname_, telephone_,))
+        self.connection.commit()
+
+    def update_branches(self, id_, name_, address_, telephone_):
+        with self.connection.cursor() as cur:
+            cur.callproc("update_branches", (id_, name_, address_, telephone_,))
+        self.connection.commit()
+
+    def update_tos(self, id_, name_, type_, price_):
+        with self.connection.cursor() as cur:
+            cur.callproc("update_tos", (id_, name_, type_, price_,))
+        self.connection.commit()
+
+    def update_services(self, id_b, id_t, id_c, date_):
+        with self.connection.cursor() as cur:
+            cur.callproc("update_services", (id_b, id_t, id_c, date_,))
         self.connection.commit()

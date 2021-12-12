@@ -32,10 +32,20 @@ $$ LANGUAGE sql;
 CREATE OR REPLACE FUNCTION create_tab_services
 () RETURNS void AS $$
 create table if not exists "services"(
-branch_id INTEGER REFERENCES branches (id_branches),
-tos_id INTEGER REFERENCES type_of_services (id_tos),
-client_id INTEGER REFERENCES clients (id_client),
-date_of_receipt text
+branch_id INTEGER,
+tos_id INTEGER,
+client_id INTEGER,
+date_of_receipt text,
+
+FOREIGN KEY(branch_id)
+    REFERENCES branches (id_branches)
+	ON DELETE CASCADE,
+FOREIGN KEY(tos_id)
+    REFERENCES type_of_services (id_tos)
+	ON DELETE CASCADE,
+FOREIGN KEY(client_id)
+    REFERENCES clients (id_client)
+	ON DELETE CASCADE
 );
 $$ LANGUAGE sql;
 
@@ -63,6 +73,8 @@ CREATE OR REPLACE FUNCTION get_services ()
     select * from services;
 $$ LANGUAGE sql;
 
+-- ADD
+
 create OR REPLACE function add_to_clients(id integer, name text, surname text, telephone integer)
 	returns void language sql as $$
 		insert into "clients"(id_client, name, surname, telephone) values (id, name, surname, telephone)
@@ -82,6 +94,8 @@ create OR REPLACE function add_to_services(br_id integer, tos_id integer, cl_id 
 	returns void language sql as $$
 		insert into "services"(branch_id, tos_id, client_id, date_of_receipt) values (br_id, tos_id, cl_id, date_)
 	$$;
+
+--DELETE
 
 CREATE OR REPLACE FUNCTION delete_clients ()
     RETURNS void
@@ -107,6 +121,8 @@ CREATE OR REPLACE FUNCTION delete_services ()
     delete from services;
 $$ LANGUAGE sql;
 
+-- SEARCH BY
+
 CREATE OR REPLACE FUNCTION search_clients_by_name (name_ text)
     RETURNS TABLE(id_client integer, name text, surname text, telephone integer, total_money integer)
     AS $$
@@ -131,12 +147,36 @@ CREATE OR REPLACE FUNCTION search_services_by_date (date_ text)
     select * from services where date_of_receipt = date_;
 $$ LANGUAGE sql;
 
---create function update_clients(in newname text, in id text)
---	returns void language plpgsql as $$
---		begin
---			update "Publisher" set name = newname where name = id;
---		end;
---	$$;
+-- UPDATE
+
+CREATE OR REPLACE FUNCTION update_clients (id_ integer, name_ text, surname_ text, telephone_ integer)
+	RETURNS void as $$
+        UPDATE clients SET id_client = id_, name = name_,
+                surname = surname_, telephone = telephone_
+        WHERE id_client = id_;
+	$$ LANGUAGE sql;
+
+CREATE OR REPLACE FUNCTION update_branches (id_ integer, name_ text, address_ text, telephone_ integer)
+	RETURNS void as $$
+        UPDATE branches SET name_br = name_, address = address_,
+            telephone = telephone_
+        WHERE id_branches = id_;
+	$$ LANGUAGE sql;
+
+CREATE OR REPLACE FUNCTION update_tos (id_ integer, name_ text, type_ text, price_ integer)
+	RETURNS void as $$
+        UPDATE type_of_services SET name_tos = name_, type = type_,
+            price = price_
+        WHERE id_tos = id_;
+	$$ LANGUAGE sql;
+
+CREATE OR REPLACE FUNCTION update_services (id_b integer, id_t integer, id_c integer, date_ text)
+	RETURNS void as $$
+        UPDATE services SET date_of_receipt = date_
+        WHERE branch_id = id_b AND tos_id = id_t AND client_id = id_c;
+	$$ LANGUAGE sql;
+
+-- DELETE BY
 
 CREATE OR REPLACE FUNCTION delete_clients_by_name (name_ text)
     RETURNS void
@@ -162,3 +202,4 @@ CREATE OR REPLACE FUNCTION delete_services_by_date (date_ text)
     delete from services where date_of_receipt = date_;
 $$ LANGUAGE sql;
 
+--DELETE STR

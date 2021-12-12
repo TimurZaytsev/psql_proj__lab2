@@ -212,3 +212,23 @@ class DatabasePy(object):
         with self.connection.cursor() as cur:
             cur.callproc("update_services", (id_b, id_t, id_c, date_,))
         self.connection.commit()
+
+    def delete_clients_by_str(self, id_):
+        with self.connection.cursor() as cur:
+            cur.callproc("delete_clients_by_str", (id_,))
+        self.connection.commit()
+
+    def delete_branches_by_str(self, id_):
+        with self.connection.cursor() as cur:
+            cur.callproc("delete_branches_by_str", (id_,))
+        self.connection.commit()
+
+    def delete_tos_by_str(self, id_):
+        with self.connection.cursor() as cur:
+            cur.callproc("delete_tos_by_str", (id_,))
+        self.connection.commit()
+
+    def delete_services_by_str(self, id_b, id_t, id_c):
+        with self.connection.cursor() as cur:
+            cur.callproc("delete_services_by_str", (id_b, id_t, id_c,))
+        self.connection.commit()

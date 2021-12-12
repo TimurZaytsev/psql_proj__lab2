@@ -36,6 +36,32 @@ class MainWindow(Q.QMainWindow):
         self.ui.customers.remove_record.clicked.connect(self.delete_customers_by_name)
         # Remove branches by name
         self.ui.branches.remove_record.clicked.connect(self.delete_branches_by_name)
+        # Remove tos by type
+        self.ui.tos.remove_record.clicked.connect(self.delete_tos_by_type)
+        # Remove services by date
+        self.ui.services.remove_record.clicked.connect(self.delete_services_by_date)
+
+    def delete_services_by_date(self):
+        date = self.ui.services.date.edit.text()
+        if not date:
+            self.missing_value_message("Date")
+            return
+        if self.db_name:
+            self.db.delete_services_by_date(date)
+            self.refresh_all_tables()
+        else:
+            self.no_db_name_message()
+
+    def delete_tos_by_type(self):
+        type = self.ui.tos.type.edit.text()
+        if not type:
+            self.missing_value_message("Type")
+            return
+        if self.db_name:
+            self.db.delete_tos_by_type(type)
+            self.refresh_all_tables()
+        else:
+            self.no_db_name_message()
 
     def delete_branches_by_name(self):
         name = self.ui.branches.name.edit.text()
@@ -62,28 +88,28 @@ class MainWindow(Q.QMainWindow):
     def delete_tos(self):
         if self.db_name:
             self.db.delete_tos()
-            self.refresh_tos_table()
+            self.refresh_all_tables()
         else:
             self.no_db_name_message()
 
     def delete_customers(self):
         if self.db_name:
             self.db.delete_clients()
-            self.refresh_customers_table()
+            self.refresh_all_tables()
         else:
             self.no_db_name_message()
 
     def delete_branches(self):
         if self.db_name:
             self.db.delete_branches()
-            self.refresh_branches_table()
+            self.refresh_all_tables()
         else:
             self.no_db_name_message()
 
     def delete_services(self):
         if self.db_name:
             self.db.delete_services()
-            self.refresh_services_table()
+            self.refresh_all_tables()
         else:
             self.no_db_name_message()
 

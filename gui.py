@@ -143,7 +143,7 @@ class Table4(Q.QWidget):
         self.add_record_button = Q.QPushButton("Add record")
         self.remove_all_button = Q.QPushButton("Remove all records from Types of service")
         self.search_record = Q.QPushButton("Search by Type")
-        self.remove_record = Q.QPushButton("Remove by Cost")
+        self.remove_record = Q.QPushButton("Remove by Type")
         self.buttons_widget = Q.QWidget()
         buttons_layout = Q.QVBoxLayout()
         buttons_layout.addWidget(self.id)

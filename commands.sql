@@ -116,7 +116,7 @@ $$ LANGUAGE sql;
 CREATE OR REPLACE FUNCTION search_branches_by_name (name_ text)
     RETURNS TABLE(id_branches integer, name_br text, address text, telephone integer)
     AS $$
-    select * from branches where name = name_;
+    select * from branches where name_br = name_;
 $$ LANGUAGE sql;
 
 CREATE OR REPLACE FUNCTION search_tos_by_type (type_ text)
@@ -131,6 +131,13 @@ CREATE OR REPLACE FUNCTION search_services_by_date (date_ text)
     select * from services where date_of_receipt = date_;
 $$ LANGUAGE sql;
 
+--create function update_clients(in newname text, in id text)
+--	returns void language plpgsql as $$
+--		begin
+--			update "Publisher" set name = newname where name = id;
+--		end;
+--	$$;
+
 CREATE OR REPLACE FUNCTION delete_clients_by_name (name_ text)
     RETURNS void
     AS $$
@@ -140,7 +147,7 @@ $$ LANGUAGE sql;
 CREATE OR REPLACE FUNCTION delete_branches_by_name (name_ text)
     RETURNS void
     AS $$
-    delete from branches where name = name_;
+    delete from branches where name_br = name_;
 $$ LANGUAGE sql;
 
 CREATE OR REPLACE FUNCTION delete_tos_by_type (type_ text)
@@ -154,3 +161,4 @@ CREATE OR REPLACE FUNCTION delete_services_by_date (date_ text)
     AS $$
     delete from services where date_of_receipt = date_;
 $$ LANGUAGE sql;
+
